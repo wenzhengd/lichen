@@ -2,11 +2,12 @@
 
 ## Summary
 
-`lichen` is now a standalone Python package, extracted from the monorepo layout and ready for publication.
+`lichen-stim` is now the standalone PyPI distribution for the `lichen` import
+package, extracted from the monorepo layout and ready for publication.
 
 ## Highlights
 
-- Standalone packaging in `pyproject.toml`.
+- Standalone packaging in `pyproject.toml` under the `lichen-stim` distribution name.
 - Root-relative install, test, and build commands in `README.md`.
 - Explicit inclusion of `README.md`, `LICENSE`, `CHANGELOG.md`, tests, and the validation notebook in source distributions.
 - Notebook bootstrap updated to discover `src/lichen` from the repository root.

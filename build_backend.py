@@ -9,7 +9,8 @@ import tarfile
 import zipfile
 
 
-NAME = "lichen"
+DIST_NAME = "lichen-stim"
+NORMALIZED_DIST_NAME = "lichen_stim"
 VERSION = "0.1.0"
 SUMMARY = "Blockwise hidden-memory simulator for correlated environment noise"
 REQUIRES_PYTHON = ">=3.10"
@@ -21,24 +22,25 @@ SRC = ROOT / "src"
 
 
 def _dist_info_dir() -> str:
-    return f"{NAME}-{VERSION}.dist-info"
+    return f"{NORMALIZED_DIST_NAME}-{VERSION}.dist-info"
 
 
 def _wheel_name() -> str:
-    return f"{NAME}-{VERSION}-py3-none-any.whl"
+    return f"{NORMALIZED_DIST_NAME}-{VERSION}-py3-none-any.whl"
 
 
 def _sdist_name() -> str:
-    return f"{NAME}-{VERSION}.tar.gz"
+    return f"{DIST_NAME}-{VERSION}.tar.gz"
 
 
 def _metadata_text() -> str:
     return "\n".join(
         [
             "Metadata-Version: 2.1",
-            f"Name: {NAME}",
+            f"Name: {DIST_NAME}",
             f"Version: {VERSION}",
             f"Summary: {SUMMARY}",
+            "Description-Content-Type: text/markdown",
             f"Requires-Python: {REQUIRES_PYTHON}",
             f"Requires-Dist: {REQUIRES_DIST}",
             "License-File: LICENSE",
@@ -53,8 +55,13 @@ def _metadata_text() -> str:
             "Classifier: Programming Language :: Python :: 3.14",
             "Classifier: Topic :: Scientific/Engineering :: Physics",
             "",
+            _readme_text(),
         ]
     )
+
+
+def _readme_text() -> str:
+    return (ROOT / "README.md").read_text(encoding="utf-8").strip()
 
 
 def _wheel_text() -> str:
@@ -105,7 +112,7 @@ def _write_wheel_file(wheel_directory: str, *, editable: bool) -> str:
 
     with zipfile.ZipFile(wheel_path, "w", compression=zipfile.ZIP_DEFLATED) as zf:
         if editable:
-            pth_name = f"{NAME}.pth"
+            pth_name = f"{NORMALIZED_DIST_NAME}.pth"
             pth_data = f"{SRC.as_posix()}\n".encode("utf-8")
             zf.writestr(pth_name, pth_data)
             record_rows.append(_record_row(pth_name, pth_data))
@@ -145,8 +152,12 @@ def _write_wheel_file(wheel_directory: str, *, editable: bool) -> str:
 
 def _write_sdist_file(sdist_directory: str) -> str:
     sdist_path = Path(sdist_directory) / _sdist_name()
-    base_dir = f"{NAME}-{VERSION}"
+    base_dir = f"{DIST_NAME}-{VERSION}"
     with tarfile.open(sdist_path, "w:gz") as tf:
+        pkg_info_data = _metadata_text().encode("utf-8")
+        pkg_info = tarfile.TarInfo(name=f"{base_dir}/PKG-INFO")
+        pkg_info.size = len(pkg_info_data)
+        tf.addfile(pkg_info, io.BytesIO(pkg_info_data))
         for file_path in _iter_sdist_files():
             arcname = f"{base_dir}/{file_path.relative_to(ROOT).as_posix()}"
             tf.add(file_path, arcname=arcname)
