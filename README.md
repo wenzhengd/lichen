@@ -1,6 +1,6 @@
-# lichen-stim
+# lichen-q
 
-`lichen-stim` is the standalone PyPI distribution for the `lichen` import
+`lichen-q` is the standalone PyPI distribution for the `lichen` import
 package. It provides blockwise hidden-memory correlated environment-noise
 simulation.
 
@@ -48,7 +48,7 @@ python -m pip install dist/*.whl
 For users installing from PyPI:
 
 ```bash
-python -m pip install lichen-stim
+python -m pip install lichen-q
 ```
 
 ## Contents

@@ -4,7 +4,7 @@ build-backend = "build_backend"
 backend-path = ["."]
 
 [project]
-name = "lichen-stim"
+name = "lichen-q"
 version = "0.1.0"
 description = "Blockwise hidden-memory simulator for correlated environment noise"
 readme = "README.md"

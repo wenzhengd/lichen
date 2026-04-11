@@ -9,8 +9,8 @@ import tarfile
 import zipfile
 
 
-DIST_NAME = "lichen-stim"
-NORMALIZED_DIST_NAME = "lichen_stim"
+DIST_NAME = "lichen-q"
+NORMALIZED_DIST_NAME = "lichen_q"
 VERSION = "0.1.0"
 SUMMARY = "Blockwise hidden-memory simulator for correlated environment noise"
 REQUIRES_PYTHON = ">=3.10"
