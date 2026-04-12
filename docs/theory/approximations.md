@@ -1,80 +1,73 @@
 # Approximations
 
-## Why An Approximation Is Needed
+## 1. Why An Approximation Is Unavoidable
 
-The exact environment is coherent and correlated across time. Keeping the full off-diagonal structure everywhere would destroy the Stim-style efficiency that the project needs for large circuits.
+The exact hidden-memory process keeps coherent off-diagonal structure across the whole circuit. That is too expensive for the intended simulator workflow, especially if the final output must still be a Pauli-channel-compatible object.
 
-So the question is not whether to approximate, but where to place the approximation boundary.
+So the real design question is not whether to approximate, but **where to place the approximation boundary**.
 
-The three package families correspond to three different answers:
+## 2. What `lichen` Keeps
 
-- `pro`: keep a global retained-diagonal analysis object;
-- `max`: project after every raw segment;
-- `ultra`: project after a short block.
+Inside each short block, conditioned on the sampled hidden variable `\xi`, the package keeps:
 
-`lichen` is built around the `ultra` choice.
+- the exact ordered product of the segment unitaries,
+- the sign structure of the toggling-frame generators,
+- the cancellation and interference completed within that block,
+- the exact short-block Pauli amplitudes on the generated support.
 
-## The Three Env Families
+## 3. What `lichen` Discards
 
-### `pro`
+At the block boundary, the package discards:
 
-`pro` keeps a retained-diagonal / effective correlated Pauli-channel picture.
-It is useful as an analysis reference, but it is too global for simulator construction.
+- off-diagonal Pauli-transfer structure of the full block map,
+- coherent relations between different Pauli components after the block,
+- coherent cross-block propagation of the discarded off-diagonal terms.
 
-### `max`
+This is the essential approximation.
 
-`max` projects after every raw segment.
-This is cheap and simple, but it removes the phase/sign information too early.
-That is why the DD sanity check collapses back to the free-evolution channel.
+## 4. Why The Approximation Boundary Is At The Block Edge
 
-### `ultra`
+If projection happens after every raw segment, local cancellation can be destroyed before it finishes.
 
-`ultra` delays projection until after a short block.
-This preserves the cancellation physics inside the block while still exporting a Pauli-channel-compatible object at the end.
+If projection is delayed until after a short block, the intended cancellation pattern can complete first, and only then is the map reduced to a Pauli-channel-compatible object.
 
-This is the preferred simulator-facing compromise.
+This is the main compromise implemented by `lichen`:
 
-The key improvement over `max` is that the sign-sensitive internal evolution
-is allowed to complete before any Pauli projection happens.
-For dynamical-decoupling-style sequences, that is the difference between
-capturing cancellation and erasing it.
+- late enough to preserve local cancellation,
+- early enough to remain simulable.
 
-The key improvement over `pro` is that the exported object is local to a block
-and can therefore be sampled or truncated without reconstructing a full global
-channel over all `4^n` Paulis.
+## 5. Choosing A Block Size
 
-## Current `lichen` Assumptions
+Block size is a modeling knob.
 
-`lichen` uses the following controlled approximations:
+- Too small: the relevant cancellation is cut in half.
+- Too large: exact internal propagation becomes expensive and the exported block channel becomes less sparse.
 
-- hidden memory is one shared Gaussian scalar `\xi` per shot;
-- blocks are short, fixed-width windows;
-- exact coherent evolution is kept within a block;
-- off-diagonal block structure is dropped only at the block boundary;
-- the exported block alphabet may be truncated with explicit knobs when needed.
+The practical rule is:
 
-## Why This Is A Good Compromise
+> choose the smallest block that contains the dominant local cancellation pattern.
 
-The blockwise strategy keeps enough coherence for dynamical-decoupling cancellation to survive, but still ends in a Pauli-channel object that a Clifford simulator can consume.
-That is the main tradeoff the package is designed around.
+In the current package workflow, the validation notebook focuses on `window_size = 2`, which is the smallest nontrivial block for the canonical sign-flip sanity checks.
 
-It is also the reason the package can remain practical:
+## 6. Sparse Export
 
-- it does not try to simulate the full coherent environment exactly;
-- it does not collapse everything segment by segment;
-- it keeps just enough structure to make the DD/free distinction visible in the
-  canonical sanity checks;
-- and it still exports a simulator-friendly block channel at a fixed window
-  size.
+After exact short-block propagation, the resulting block channel is exported as a sparse Pauli distribution.
 
-## Practical Implications
+This gives the package its downstream efficiency:
 
-For users of the package:
+- identity with high probability,
+- a sparse set of nontrivial block faults,
+- optional truncation knobs when needed,
+- one shared hidden `\xi` reused across the whole shot.
 
-- if you want a cheap reference analysis, `pro` is useful;
-- if you want the simplest fast sampler, `max` is useful;
-- if you want the best current compromise between physics and efficiency,
-  `ultra` is the default recommendation.
+## 7. Practical Interpretation
 
-The validation notebook and the modular theory notes should be read in that
-order.
+`lichen` should therefore be understood as a **blockwise hidden-memory Pauli simulator**.
+
+It is not:
+
+- an exact global simulator of the full coherent environment,
+- a purely segmentwise Pauli approximation,
+- or a general-purpose non-Clifford solver.
+
+It is a controlled compromise designed to preserve the short-range cancellation physics that matters for correlated dephasing while still exporting a Pauli-compatible object for efficient simulation.

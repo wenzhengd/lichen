@@ -1,8 +1,6 @@
 # Documentation
 
-Start here:
-
-- [index.md](index.md)
+Start with [index.md](index.md).
 
 Theory notes:
 
