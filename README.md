@@ -85,4 +85,5 @@ The package ships with a validation notebook under `examples/lichen_validation.i
 
 ## Docs
 
-See the lightweight docs landing page at [docs/README.md](docs/README.md).
+- [docs/README.md](docs/README.md)
+- [docs/index.md](docs/index.md)

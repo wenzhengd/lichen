@@ -1,15 +1,16 @@
-# lichen-q
+# Documentation
 
-<p align="center">
-  <img src="lichen_logo.jpg" alt="lichen-q logo" width="360">
-</p>
+Start here:
 
-`lichen-q` is the standalone PyPI distribution for the `lichen` import package.
+- [index.md](index.md)
 
-It provides blockwise hidden-memory correlated environment-noise simulation for DD-aware noisy-circuit sampling.
+Theory notes:
 
-## Links
+- [theory/physical_model.md](theory/physical_model.md)
+- [theory/derivations.md](theory/derivations.md)
+- [theory/approximations.md](theory/approximations.md)
+- [theory/notation.md](theory/notation.md)
 
-- [Repository README](../README.md)
-- [Validation notebook](../examples/lichen_validation.ipynb)
-- [Changelog](../CHANGELOG.md)
+Executable tutorial:
+
+- [tutorials/end_to_end_demo.ipynb](tutorials/end_to_end_demo.ipynb)
