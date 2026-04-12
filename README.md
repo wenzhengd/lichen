@@ -5,7 +5,7 @@
 [![CI](https://github.com/wenzhengd/lichen/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/wenzhengd/lichen/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-<img src="https://raw.githubusercontent.com/wenzhengd/lichen/main/docs/lichen_logo.jpg" alt="lichen-q logo" width="280">
+<img src="docs/lichen_logo.jpg" alt="lichen-q logo" width="280">
 
 `lichen-q` is the standalone PyPI distribution for the `lichen` import
 package. It provides blockwise hidden-memory correlated environment-noise

@@ -1,7 +1,7 @@
 # lichen-q
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/wenzhengd/lichen/main/docs/lichen_logo.jpg" alt="lichen-q logo" width="360">
+  <img src="lichen_logo.jpg" alt="lichen-q logo" width="360">
 </p>
 
 `lichen-q` is the standalone PyPI distribution for the `lichen` import package.
