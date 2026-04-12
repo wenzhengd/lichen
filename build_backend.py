@@ -30,7 +30,7 @@ def _wheel_name() -> str:
 
 
 def _sdist_name() -> str:
-    return f"{DIST_NAME}-{VERSION}.tar.gz"
+    return f"{NORMALIZED_DIST_NAME}-{VERSION}.tar.gz"
 
 
 def _metadata_text() -> str:
@@ -152,7 +152,7 @@ def _write_wheel_file(wheel_directory: str, *, editable: bool) -> str:
 
 def _write_sdist_file(sdist_directory: str) -> str:
     sdist_path = Path(sdist_directory) / _sdist_name()
-    base_dir = f"{DIST_NAME}-{VERSION}"
+    base_dir = f"{NORMALIZED_DIST_NAME}-{VERSION}"
     with tarfile.open(sdist_path, "w:gz") as tf:
         pkg_info_data = _metadata_text().encode("utf-8")
         pkg_info = tarfile.TarInfo(name=f"{base_dir}/PKG-INFO")
