@@ -7,12 +7,34 @@
 
 <img src="docs/lichen_logo.jpg" alt="lichen-q logo" width="280">
 
-`lichen-q` is the standalone PyPI distribution for the `lichen` import
-package. It provides blockwise hidden-memory correlated environment-noise
-simulation.
+`lichen-q` is the standalone PyPI distribution for the `lichen` import package.
+It implements blockwise hidden-memory correlated-noise sampling for ideal
+Clifford circuits under the current shared quasi-static dephasing model.
 
-It provides the blockwise hidden-memory correlated environment-noise simulator
-used for DD-aware noisy-circuit sampling.
+The current codebase is organized around one approximation boundary:
+
+- evolve exactly inside a short block in the toggling frame,
+- project only at the block boundary into a Pauli channel,
+- sample one block fault per block,
+- then map the sampled toggling-frame fault into the physical inserted fault
+  after the ideal block.
+
+That simulator-facing `Q_b -> F_b` convention is aligned with
+[docs/lichen_manuscript.md](docs/lichen_manuscript.md).
+
+## Current Scope
+
+The present implementation is intentionally narrow:
+
+- ideal circuit gates are Clifford-only, mainly single-qubit Cliffords and
+  `CNOT`,
+- noise is one shared Gaussian hidden variable `xi` reused across the full
+  shot,
+- each ideal layer is followed by one noisy segment,
+- fixed-width block partitioning is the default runtime path.
+
+This is enough for DD-style validation cases, small exact block studies, and
+larger demonstration circuits such as the QEC examples under `examples/`.
 
 ## Quick Start
 
@@ -22,24 +44,94 @@ Install from PyPI:
 python -m pip install lichen-q
 ```
 
-Use it from Python:
-
-```python
-from lichen import SharedQuasiStaticModel
-
-model = SharedQuasiStaticModel(
-    num_qubits=1,
-    sigma2=0.125,
-    segment_durations=(0.25, 0.25),
-)
-print(model.num_qubits)
-```
-
-From this repo root, for development:
+For development from this repo root:
 
 ```bash
 python -m pip install -e .[dev]
 ```
+
+Minimal Python example:
+
+```python
+import numpy as np
+
+from lichen import (
+    CircuitDescription,
+    CircuitLayer,
+    SharedQuasiStaticModel,
+    sample_blockwise_hidden_memory_processes,
+)
+
+circuit = CircuitDescription(
+    layers=(
+        CircuitLayer(layer_index=0, gate_name="H", qubits=(0,)),
+        CircuitLayer(layer_index=1, gate_name="H", qubits=(0,)),
+    )
+)
+model = SharedQuasiStaticModel(
+    num_qubits=1,
+    sigma2=0.04,
+    segment_durations=(1.0, 1.0),
+)
+batch = sample_blockwise_hidden_memory_processes(
+    model,
+    circuit,
+    window_size=2,
+    num_shots=10,
+    rng=np.random.default_rng(0),
+    num_workers=1,
+)
+print(batch.num_shots)
+```
+
+## Main Capabilities
+
+- block partitioning of layerized ideal circuits
+- Clifford-frame tracking and toggling-frame segment-generator construction
+- exact short-block Pauli-amplitude convolution on sparse generated support
+- sparse exported block-fault distributions
+- sampled block processes carrying both toggling-frame and physical fault labels
+- process-based Monte Carlo parallelism via `num_workers`
+
+## Repo Layout
+
+- `src/lichen/`: core package code
+- `tests/`: unit and smoke tests
+- `docs/theory/`: lightweight theory notes aligned with the current code
+- `docs/lichen_manuscript.md`: fuller technical report and target modeling reference
+- `docs/tutorials/`: canonical validation and tutorial notebooks
+- `examples/`: larger demonstration workloads and showcase notebooks
+- `examples/QEC_examples/`: QEC circuit scripts and the QEC notebook
+
+## Notebooks
+
+Canonical validation notebook:
+
+- [docs/tutorials/end_to_end_demo.ipynb](docs/tutorials/end_to_end_demo.ipynb)
+
+Demonstration notebook:
+
+- [examples/QEC_examples/QEC_examples.ipynb](examples/QEC_examples/QEC_examples.ipynb)
+
+The mirrored validation copy under
+[examples/lichen_validation.ipynb](examples/lichen_validation.ipynb) is kept
+for convenience, but `docs/tutorials/` remains the canonical validation home.
+
+## QEC Examples
+
+Current QEC assets include:
+
+- [examples/QEC_examples/Shor_9-1-3.py](examples/QEC_examples/Shor_9-1-3.py)
+- [examples/QEC_examples/Rotated_Surface_d2.py](examples/QEC_examples/Rotated_Surface_d2.py)
+- [examples/QEC_examples/Rotated_Surface_d3_memory_x.py](examples/QEC_examples/Rotated_Surface_d3_memory_x.py)
+
+The notebook currently contains:
+
+- an executed Shor `[[9,1,3]]` example,
+- an executed 7-qubit rotated distance-2 surface-code example,
+- a scaffolded 17-qubit rotated distance-3 memory-X example that is currently
+  left unexecuted because it is a much heavier exact workload in the present
+  one-gate-per-layer model.
 
 ## Test
 
@@ -52,7 +144,7 @@ python -m pytest -q
 or:
 
 ```bash
-python -m unittest discover -s tests -t . -q
+PYTHONPATH=src python -m unittest discover -s tests -t . -q
 ```
 
 ## Build
@@ -71,26 +163,11 @@ From this repo root:
 python -m pip install dist/*.whl
 ```
 
-## Contents
-
-- block partitioning
-- Clifford-frame tracking
-- exact short-block Pauli-amplitude convolution
-- sparse block-fault export
-- blockwise hidden-memory sampling
-
-## Validation
-
-The canonical validation/tutorial notebook lives under
-`docs/tutorials/end_to_end_demo.ipynb`.
-
-The mirrored copy under `examples/lichen_validation.ipynb` is currently kept
-for convenience, but the intended repo split is:
-
-- `docs/tutorials/`: validation and theory-connected tutorials
-- `examples/`: larger demonstration notebooks and realistic workloads
-
 ## Docs
 
 - [docs/README.md](docs/README.md)
 - [docs/index.md](docs/index.md)
+
+## Contact
+
+- `wenzheng.dong.quantum@gmail.com`
