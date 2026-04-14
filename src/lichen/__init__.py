@@ -23,9 +23,12 @@ from .block_probability_search import (
 )
 from .block_sampler import (
     BlockFaultChoice,
+    PreparedBlockwiseHiddenMemorySimulation,
     BlockwiseHiddenMemoryProcess,
     BlockwiseHiddenMemoryProcessBatch,
+    build_prepared_blockwise_hidden_memory_process,
     build_blockwise_hidden_memory_process,
+    prepare_blockwise_hidden_memory_simulation,
     sample_blockwise_hidden_memory_processes,
 )
 from .block_template_cache import UltraBlockTemplateCache, build_block_signature
@@ -54,6 +57,7 @@ __all__ = [
     "AnticommutationComponent",
     "BlockDescriptor",
     "BlockFaultChoice",
+    "PreparedBlockwiseHiddenMemorySimulation",
     "BlockPauliChannel",
     "SparseBlockFaultDistribution",
     "SparseExportConfig",
@@ -69,10 +73,12 @@ __all__ = [
     "TwoSegmentBlockStructure",
     "analyze_two_segment_blocks",
     "build_block_pauli_channel",
+    "build_prepared_blockwise_hidden_memory_process",
     "build_supported_block_probability_search",
     "build_block_signature",
     "build_hidden_memory_quadrature",
     "build_blockwise_hidden_memory_process",
+    "prepare_blockwise_hidden_memory_simulation",
     "build_exact_block_unitary",
     "build_fixed_window_blocks",
     "count_xy_support",

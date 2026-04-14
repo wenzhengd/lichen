@@ -56,14 +56,26 @@ $$
 
 where the same `\xi` appears in every segment in the shot.
 
-This exact process is the starting point of the derivation. The package does not simulate Eq. (1) globally because that would keep too much coherent structure for large circuits.
+This exact process is the starting point of the derivation. The package does not
+simulate Eq. (1) globally because that would keep too much coherent structure
+for large circuits.
 
 ## 5. Block View
 
 Instead of projecting after each raw segment, `lichen` groups consecutive segments into a short **block**. The block is the unit of exact hidden-memory propagation before Pauli projection.
 
-The package-facing object is therefore:
+The important frame convention is:
+
+- exact propagation is carried out inside the block in the toggling frame,
+- the resulting block Pauli distribution is therefore also a toggling-frame
+  object,
+- a sampled block Pauli fault is then conjugated by the cumulative Clifford at
+  the end of the block to obtain the physical inserted fault,
+- the same hidden `\xi` is reused across all blocks in the shot.
+
+So the simulator-facing object is not only "a block Pauli channel". It is:
 
 - exact internal evolution inside a short block,
-- then a Pauli-compatible block channel,
-- with the same hidden `\xi` reused across all blocks in the shot.
+- then a toggling-frame block Pauli distribution,
+- then a physical inserted Pauli fault obtained from that sampled
+  toggling-frame fault.

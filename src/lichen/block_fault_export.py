@@ -151,7 +151,7 @@ def export_sparse_probabilities(
     if export_config.top_k_non_identity is not None:
         kept_non_identity = kept_non_identity[: export_config.top_k_non_identity]
 
-    kept_probabilities = {identity_label: probabilities[identity_label]}
+    kept_probabilities = {identity_label: probabilities.get(identity_label, 0.0)}
     kept_probabilities.update(dict(kept_non_identity))
 
     kept_probability_mass = sum(kept_probabilities.values())

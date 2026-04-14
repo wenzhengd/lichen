@@ -20,6 +20,8 @@ This note collects the symbols used across the `lichen` documentation.
 - `d_{b,B}(\xi)`: retained diagonal coefficient for Pauli basis element `B`
 - `u_{b,P}(\xi)`: Pauli-expansion coefficient for basis element `P`
 - `q_{b,P}(\xi)`: block Pauli-channel probability for `P`
+- `Q_b`: sampled block fault in the toggling frame
+- `F_b`: sampled physical inserted fault after conjugation by `G_{e_b}`
 
 ## States And Channels
 
@@ -27,7 +29,7 @@ This note collects the symbols used across the `lichen` documentation.
 - `\mathcal N_j^{(\xi)}`: exact conditional noisy map of one segment
 - `\widetilde{\mathcal N}_b^{(\xi)}`: Pauli-projected conditional block map
 - `\mathcal E`: exact hidden-memory process
-- `\mathcal E_{\mathrm{block}}`: blockwise approximate process implemented by the package
+- `\widetilde{\mathcal E}_{\mathrm{tf,block}}`: blockwise approximate environmental process in the toggling frame
 
 ## Code Mapping
 
@@ -35,5 +37,5 @@ This note collects the symbols used across the `lichen` documentation.
 - `segment_generators.py`: builds `A_j`
 - `block_partition.py`: defines the block decomposition
 - `block_probability_search.py`: computes exact short-block Pauli amplitudes
-- `block_fault_export.py`: exports sparse simulator-facing block channels
-- `block_sampler.py`: samples block faults shot by shot
+- `block_fault_export.py`: exports sparse toggling-frame block distributions
+- `block_sampler.py`: samples toggling-frame block faults and maps them to physical inserted faults

@@ -81,7 +81,14 @@ python -m pip install dist/*.whl
 
 ## Validation
 
-The package ships with a validation notebook under `examples/lichen_validation.ipynb`.
+The canonical validation/tutorial notebook lives under
+`docs/tutorials/end_to_end_demo.ipynb`.
+
+The mirrored copy under `examples/lichen_validation.ipynb` is currently kept
+for convenience, but the intended repo split is:
+
+- `docs/tutorials/`: validation and theory-connected tutorials
+- `examples/`: larger demonstration notebooks and realistic workloads
 
 ## Docs
 

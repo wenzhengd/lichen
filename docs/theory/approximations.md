@@ -23,7 +23,9 @@ At the block boundary, the package discards:
 - coherent relations between different Pauli components after the block,
 - coherent cross-block propagation of the discarded off-diagonal terms.
 
-This is the essential approximation.
+This is the essential approximation. The Pauli reduction is performed in the
+toggling frame. After one block fault is sampled there, it is conjugated into a
+physical inserted fault before being applied to the circuit.
 
 ## 4. Why The Approximation Boundary Is At The Block Edge
 
@@ -51,14 +53,18 @@ In the current package workflow, the validation notebook focuses on `window_size
 
 ## 6. Sparse Export
 
-After exact short-block propagation, the resulting block channel is exported as a sparse Pauli distribution.
+After exact short-block propagation, the resulting block channel is exported as
+a sparse toggling-frame Pauli distribution.
 
 This gives the package its downstream efficiency:
 
 - identity with high probability,
-- a sparse set of nontrivial block faults,
+- a sparse set of nontrivial toggling-frame block faults,
 - optional truncation knobs when needed,
 - one shared hidden `\xi` reused across the whole shot.
+
+The simulator then maps the sampled toggling-frame block fault to the physical
+inserted Pauli fault at the end of the block.
 
 ## 7. Practical Interpretation
 
@@ -70,4 +76,6 @@ It is not:
 - a purely segmentwise Pauli approximation,
 - or a general-purpose non-Clifford solver.
 
-It is a controlled compromise designed to preserve the short-range cancellation physics that matters for correlated dephasing while still exporting a Pauli-compatible object for efficient simulation.
+It is a controlled compromise designed to preserve the short-range cancellation
+physics that matters for correlated dephasing while still exporting a
+Pauli-compatible object for efficient simulation.

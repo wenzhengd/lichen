@@ -2,6 +2,11 @@
 
 Start with [index.md](index.md).
 
+Directory roles:
+
+- `docs/tutorials/`: canonical validation/tutorial notebooks tied to the theory notes
+- `examples/`: demonstration notebooks and larger showcase workloads
+
 Theory notes:
 
 - [theory/physical_model.md](theory/physical_model.md)
