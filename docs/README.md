@@ -21,7 +21,8 @@ Recommended reading order:
 3. [theory/derivations.md](theory/derivations.md)
 4. [theory/approximations.md](theory/approximations.md)
 5. [theory/notation.md](theory/notation.md)
-6. [lichen_manuscript.md](lichen_manuscript.md) for the fuller report
+6. [architecture_mermaid.md](architecture_mermaid.md) for a high-level code map
+7. [lichen_manuscript.md](lichen_manuscript.md) for the fuller report
 
 Important current convention:
 

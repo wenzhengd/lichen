@@ -167,6 +167,7 @@ python -m pip install dist/*.whl
 
 - [docs/README.md](docs/README.md)
 - [docs/index.md](docs/index.md)
+- [docs/architecture_mermaid.md](docs/architecture_mermaid.md)
 
 ## Contact
 
